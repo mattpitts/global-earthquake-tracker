@@ -72,13 +72,11 @@ function updateGlobeMarkers(earth) {
 		let lattitude = Number(earthquakeData[i].geometry.coordinates[0]);
 		let longitude = Number(earthquakeData[i].geometry.coordinates[1]);
 		let newMarker = WE.marker([longitude,lattitude]).addTo(earth);
-		earthquakeMarkers.push(newMarker);
 	}
 }
 
 
 function createDetailContent(index) {
-	earthDivDebug();
 	$('#detailcontainer').empty();
 	let $detailsCard = $('<div>').addClass('card detailscard');
 	$detailsCard.append($('<div>').addClass('card-header').text("Details"));
