@@ -14,7 +14,42 @@
 	<body>
 		<div class="container-fluid">
 			<header class="row">
-				<h1 class="maintitle" id="title">Global Earthquake Tracker</h1>
+				<div class="col-sm-3">
+					<h1 class="maintitle" id="title">Global Earthquake Tracker</h1>
+				</div>
+				<div class="col-sm-5">
+
+				</div>
+				<div class="col-sm-3">
+					<form>
+						<div class="row">
+							<div class="col-sm-3">
+								<div class="form-group">
+									<label for="minimum-magnitude">Magnitude</label>
+	    							<input type="minimum-magnitude" class="form-control" id="minimum-magnitude" value="7">
+									<small class="form-text">Minimum</small>
+									<input type="maximum-magnitude" class="form-control" id="maximum-magnitude" value="10">
+									<small class="form-text">Maximum</small>
+	  							</div>
+							</div>
+							<div class="col-sm-6">
+								<div class="form-group">
+									<label for="minimum-date">Date Range</label>
+									<input type="minimum-date" class="form-control" id="minimum-date" value="2013-01-15">
+									<small class="form-text">Start</small>
+									<input type="maximum-date" class="form-control" id="maximum-date" value="2015-01-15">
+									<small class="form-text">End</small>
+								</div>
+							</div>
+							<div class="col-sm-2 buttontest align-self-end">
+								<button type="submit" id="submit" class="btn btn-primary searchbutton">Search</button>
+							</div>
+						</div>
+					</form>
+				</div>
+				<div class="col-sm-1">
+
+				</div>
 			</header>
 			<main class="row">
 				<div class="col-sm-1">
@@ -31,7 +66,7 @@
 
 
 					</div>
-					<div class="row detailcontainer">
+					<div class="row detailcontainer" id="detailcontainer">
 
 					</div>
 

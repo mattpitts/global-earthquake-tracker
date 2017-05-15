@@ -10,7 +10,7 @@ header {
 	opacity: 0.9;
 }
 .maintitle {
-	margin: 2% 0 5% 4%;
+	margin: 2% 0 5% 30%;
 	text-shadow: 4px 4px 2px #515151;
 }
 main {
@@ -29,7 +29,6 @@ main {
 }
 .carouselcontainer {
 	height: 35%;
-	display: inline-flex;
 	margin: 3% 1% 1% 1%;
 	padding: 1% 1% 1% 1%;
 	border-radius: 1%;
@@ -37,7 +36,12 @@ main {
 	box-shadow: .5px .5px 1px #3d3d3d;
 }
 .detailcontainer {
-	height: 60%;
+	height: 55%;
+	margin: 3% 1% 1% 1%;
+	padding: 1% 1% 1% 1%;
+	border-radius: 1%;
+	background-color: rgba(117, 117, 117, 0.28);
+	box-shadow: .5px .5px 1px #3d3d3d;
 }
 .card {
 	height: 95%;
@@ -46,6 +50,11 @@ main {
 	box-shadow: 1px 1px 2px #3d3d3d;
 	display: flex;
 	flex-direction: column;
+}
+.detailscard {
+	width: 98%;
+	height: 98%;
+	margin: 1%;
 }
 .globe-container {
 	width: 100%;
@@ -63,4 +72,22 @@ main {
 }
 .map-button {
 	align-self: flex-end;
+}
+.custom-select {
+	margin: 3%;
+}
+.form-group {
+	margin: 0;
+	font-size: .8em;
+}
+.carouselcontainer .card-header {
+	height: 15%;
+	padding: 0;
+}
+.carouselcontainer .card-footer {
+	padding: 1%;
+	text-align: center;
+}
+.searchbutton {
+	margin: 0 5% 50% 1%;
 }
