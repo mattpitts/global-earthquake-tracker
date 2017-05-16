@@ -57,7 +57,7 @@ function initializeCarousel() {
 	$('#carouselcontainer').on('click','.btn', function() {
 		let index = $(this).attr('data-index');
 		createDetailContent(index);
-		// earth.panTo(10,13);
+		centerGlobeOnEarthquake(index);
 	});
 }
 
@@ -67,6 +67,7 @@ function initializeGlobe() {
     earth = new WE.map('earth_div', options);
 	WE.tileLayer('http://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}').addTo(earth);
 	updateGlobeMarkers(earth);
+	console.log(earth.da.P.O);
  }
 
 
@@ -74,9 +75,13 @@ function updateGlobeMarkers(earth) {
 	for (var i = 0; i < earthquakeData.length; i++) {
 		let lattitude = Number(earthquakeData[i].geometry.coordinates[0]);
 		let longitude = Number(earthquakeData[i].geometry.coordinates[1]);
-		let newMarker = WE.marker([longitude,lattitude]).addTo(earth);
+		let newMarker = WE.marker([longitude,lattitude]);
+		// newMarker.element
+		newMarker.element.childNodes["0"].setAttribute('data-index', i);
+		// console.log(newMarker.element.childNodes["0"].outerHTML);
+		newMarker.addTo(earth);
 	}
-	console.log(earth);
+	initializeGlobeMarkerListener();
 }
 
 
@@ -116,6 +121,26 @@ function removeLastSearch() {
 	earthquakeData = [];
 	earthquakeCards = [];
 }
+
+
+function initializeGlobeMarkerListener() {
+	$('.globe-container').on('click', '.we-pm-icon', function() {
+		createDetailContent($(this).attr('data-index'));
+	});
+}
+
+function deleteMarkers() {
+	for (let i in earth.da.P.O) {
+		earth.da.P.O[i].removeFrom(earth);
+	}
+}
+
+function centerGlobeOnEarthquake(index) {
+	let lattitude = Number(earthquakeData[index].geometry.coordinates[0]);
+	let longitude = Number(earthquakeData[index].geometry.coordinates[1]);
+	earth.panTo([longitude,lattitude]);
+}
+
 //
 // function createLoadingScreen() {
 // 	let $loadContainer = $('<div>').addClass('loadingscreen');
