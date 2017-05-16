@@ -1,6 +1,6 @@
-var startTime = "2015-01-15";
-var endTime = "2017-04-01";
-var minMagnitude = "6.8";
+var startTime = "&starttime=2013-01-15";
+var endTime = "&endtime=2015-01-15";
+var minMagnitude = "&minmagnitude=7";
 var earthquakeData = [];
 var earthquakeCards= [];
 var earth;
@@ -16,12 +16,14 @@ $(document).ready(function() {
 function getEarthquakeInfo() {
 	removeLastSearch();
 	$('#submit').attr('disabled','disabled');
-	$.get("https://earthquake.usgs.gov/fdsnws/event/1/query?format=geojson&starttime="+
-		startTime+
-		"&endtime="+endTime+
-		"&minmagnitude="+minMagnitude+"&limit=1000").then(function(data) {
-		createEarthquakeData(data);
-		$('#submit').removeAttr('disabled');
+	$.get("https://earthquake.usgs.gov/fdsnws/event/1/query?format=geojson"
+		+ startTime
+		+ endTime
+		+ minMagnitude
+		+ "&limit=1000").then(function(data) {
+			createEarthquakeData(data);
+			$('#submit').removeAttr('disabled');
+			$('.loadingscreen').fadeOut(250);
 	});
 }
 
@@ -55,14 +57,15 @@ function initializeCarousel() {
 	$('#carouselcontainer').on('click','.btn', function() {
 		let index = $(this).attr('data-index');
 		createDetailContent(index);
+		// earth.panTo(10,13);
 	});
 }
 
 
 function initializeGlobe() {
     var options = { zoom: 2.5, position: [17,132] };
-    var earth = new WE.map('earth_div', options);
-	WE.tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(earth);
+    earth = new WE.map('earth_div', options);
+	WE.tileLayer('http://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}').addTo(earth);
 	updateGlobeMarkers(earth);
  }
 
@@ -73,6 +76,7 @@ function updateGlobeMarkers(earth) {
 		let longitude = Number(earthquakeData[i].geometry.coordinates[1]);
 		let newMarker = WE.marker([longitude,lattitude]).addTo(earth);
 	}
+	console.log(earth);
 }
 
 
@@ -95,9 +99,10 @@ function createDetailContent(index) {
 function initializeSubmitButton() {
 	$('#submit').click(function() {
 		event.preventDefault();
-		startTime = $('#minimum-date').val();
-		endTime = $('#maximum-date').val();
-		minMagnitude = $('#minimum-magnitude').val();
+		startTime = "&starttime=" + $('#minimum-date').val();
+		endTime = "&endtime=" + $('#maximum-date').val();
+		minMagnitude = "&minmagnitude=" + $('#minimum-magnitude').val();
+		$('.loadingscreen').fadeIn(150);
 		getEarthquakeInfo();
 	});
 }
@@ -111,6 +116,15 @@ function removeLastSearch() {
 	earthquakeData = [];
 	earthquakeCards = [];
 }
+//
+// function createLoadingScreen() {
+// 	let $loadContainer = $('<div>').addClass('loadingscreen');
+// 	$(body).append($loadContainer);
+// }
+//
+// function removeLoadingScreen() {
+// 	$('.loadingscreen').hide();
+// }
 
 // function earthDivDebug() {
 // 	let foo = $('#earth_div');
