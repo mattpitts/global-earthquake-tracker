@@ -3,6 +3,7 @@ var endTime = "&endtime=2015-01-15";
 var minMagnitude = "&minmagnitude=7";
 var earthquakeData = [];
 var earthquakeCards= [];
+var indexesByDistance = [];
 var earth;
 
 
@@ -10,6 +11,9 @@ $(document).ready(function() {
 	getEarthquakeInfo();
 	initializeCarousel();
 	initializeSubmitButton();
+	// let test = findDistance(39.7392, 104.9903, 32.7767, 96.7970);
+	// console.log(test/1000);
+	//should be 1066.30 kilometers
 });
 
 
@@ -20,7 +24,7 @@ function getEarthquakeInfo() {
 		+ startTime
 		+ endTime
 		+ minMagnitude
-		+ "&limit=1000").then(function(data) {
+		+ "&limit=400").then(function(data) {
 			createEarthquakeData(data);
 			$('#submit').removeAttr('disabled');
 			$('.loadingscreen').fadeOut(250);
@@ -65,9 +69,9 @@ function initializeCarousel() {
 function initializeGlobe() {
     var options = { zoom: 2.5, position: [17,132] };
     earth = new WE.map('earth_div', options);
-	WE.tileLayer('http://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}').addTo(earth);
+	WE.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}').addTo(earth);
+	// $('#earth_div').css('background-color', 'black');
 	updateGlobeMarkers(earth);
-	console.log(earth.da.P.O);
  }
 
 
@@ -125,7 +129,10 @@ function removeLastSearch() {
 
 function initializeGlobeMarkerListener() {
 	$('.globe-container').on('click', '.we-pm-icon', function() {
-		createDetailContent($(this).attr('data-index'));
+		let index = $(this).attr('data-index');
+		createDetailContent(index);
+		updateEarthquakeDistances(index);
+		// console.log(earthquakeData);
 	});
 }
 
@@ -141,23 +148,73 @@ function centerGlobeOnEarthquake(index) {
 	earth.panTo([longitude,lattitude]);
 }
 
-//
-// function createLoadingScreen() {
-// 	let $loadContainer = $('<div>').addClass('loadingscreen');
-// 	$(body).append($loadContainer);
-// }
-//
-// function removeLoadingScreen() {
-// 	$('.loadingscreen').hide();
+function updateEarthquakeDistances(index) {
+	let selectedLat = Number(earthquakeData[index].geometry.coordinates[0]);
+	let selectedLon = Number(earthquakeData[index].geometry.coordinates[1]);
+	for (var i = 0; i < earthquakeData.length; i++) {
+		let checkLat = Number(earthquakeData[i].geometry.coordinates[0]);
+		let checkLon = Number(earthquakeData[i].geometry.coordinates[1]);
+		earthquakeData[i].distanceFromSelected = findDistance(selectedLat, selectedLon, checkLat, checkLon);
+		// 	console.log(earthquakeData[i].disanceFromSelected);
+	}
+	findClosestQuakes(5);
+}
+
+
+
+
+//  Haversine method
+function findDistance(lat1,long1,lat2,long2) {
+	let radius = 6378137;
+	let deltaLat = lat1-lat2;
+	let deltaLong = long1-long2;
+	let angle = 2 * Math.asin( Math.sqrt(Math.pow(Math.sin(deltaLat/2), 2) + Math.cos(lat1) * Math.cos(lat2) * Math.pow(Math.sin(deltaLong/2), 2)));
+	return angle * radius;
+}
+
+// function findClosestQuakes(num) {
+// 	let lastClosestDistance = 0;
+// 	let quakesFound = 0;
+// 	let foundQuakesIndexes = [];
+// 	// while(quakesFound <= num) {
+// 		for (var i = 0; i < earthquakeData.length; i++) {
+// 			if(earthquakeData[i].disanceFromSelected > lastClosestDistance) {
+// 				foundQuakesIndexes.push(i);
+// 				lastClosestDistance = earthquakeData[i].disanceFromSelected;
+// 				quakesFound++;
+// 			}
+// 		}
+// 	// }
+// 	populateCarousel(foundQuakesIndexes);
 // }
 
-// function earthDivDebug() {
-// 	let foo = $('#earth_div');
-// 	console.log(foo);
-// 	for (var i = 0; i < foo.length; i++) {
-// 		console.log(foo[i]);
-// 	}
-// }
-// function removeMarkers() {
-// 	console.log(earth);
+function findClosestQuakes(num) {
+	let distances = [];
+	for (let x = 0; x < earthquakeData.length; x++) {
+		distances.push(earthquakeData[x].distanceFromSelected);
+	}
+	let sortedDistances = distances.sort(function(a,b) { return a - b; });
+	console.log(sortedDistances);
+	let foundQuakesIndexes = []
+	for (var i = 1; i < num + 1; i++) {
+		for(let j = 0; j < earthquakeData.length; j++) {
+			if(sortedDistances[i] === earthquakeData[j].distanceFromSelected) {
+				foundQuakesIndexes.push(j);
+			}
+		}
+	}
+	populateCarousel(foundQuakesIndexes);
+}
+
+function populateCarousel(indexes) {
+	$('#carouselcontainer').empty();
+	for (var i = 0; i < indexes.length; i++) {
+		$('#carouselcontainer').append(earthquakeCards[indexes[i]]);
+	}
+}
+
+// function findDistance(lat1,long1,lat2,long2) {
+// 	let absoluteLongitudeDifference = long2 - long1;
+// 	let centralAngle = Math.acos( Math.sin(lat1) * Math.sin(lat2) + Math.cos(lat1) * Math.cos(lat2) * Math.cos(absoluteLongitudeDifference));
+// 	return 6378137 * centralAngle;
 // }
