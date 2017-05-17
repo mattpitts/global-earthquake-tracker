@@ -160,33 +160,16 @@ function updateEarthquakeDistances(index) {
 	findClosestQuakes(5);
 }
 
-
-
-
 //  Haversine method
 function findDistance(lat1,long1,lat2,long2) {
 	let radius = 6378137;
-	let deltaLat = lat1-lat2;
-	let deltaLong = long1-long2;
-	let angle = 2 * Math.asin( Math.sqrt(Math.pow(Math.sin(deltaLat/2), 2) + Math.cos(lat1) * Math.cos(lat2) * Math.pow(Math.sin(deltaLong/2), 2)));
+	let deltaLat = lat2-lat1;
+	let deltaLong = long2-long1;
+	// let angle = 2 * Math.asin( Math.sqrt(Math.pow(Math.sin(deltaLat/2), 2) + Math.cos(lat1) * Math.cos(lat2) * Math.pow(Math.sin(deltaLong/2), 2)));
+	let angle = 2 * Math.atan2( Math.sqrt(Math.pow(Math.sin(deltaLat/2), 2) + Math.cos(lat1) * Math.cos(lat2) * Math.pow(Math.sin(deltaLong/2), 2)));
+
 	return angle * radius;
 }
-
-// function findClosestQuakes(num) {
-// 	let lastClosestDistance = 0;
-// 	let quakesFound = 0;
-// 	let foundQuakesIndexes = [];
-// 	// while(quakesFound <= num) {
-// 		for (var i = 0; i < earthquakeData.length; i++) {
-// 			if(earthquakeData[i].disanceFromSelected > lastClosestDistance) {
-// 				foundQuakesIndexes.push(i);
-// 				lastClosestDistance = earthquakeData[i].disanceFromSelected;
-// 				quakesFound++;
-// 			}
-// 		}
-// 	// }
-// 	populateCarousel(foundQuakesIndexes);
-// }
 
 function findClosestQuakes(num) {
 	let distances = [];
@@ -195,7 +178,7 @@ function findClosestQuakes(num) {
 	}
 	let sortedDistances = distances.sort(function(a,b) { return a - b; });
 	console.log(sortedDistances);
-	let foundQuakesIndexes = []
+	let foundQuakesIndexes = [];
 	for (var i = 1; i < num + 1; i++) {
 		for(let j = 0; j < earthquakeData.length; j++) {
 			if(sortedDistances[i] === earthquakeData[j].distanceFromSelected) {
@@ -212,6 +195,9 @@ function populateCarousel(indexes) {
 		$('#carouselcontainer').append(earthquakeCards[indexes[i]]);
 	}
 }
+
+
+
 
 // function findDistance(lat1,long1,lat2,long2) {
 // 	let absoluteLongitudeDifference = long2 - long1;
