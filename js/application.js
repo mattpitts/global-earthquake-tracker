@@ -2,7 +2,7 @@ var startTime = "&starttime=2013-01-15";
 var endTime = "&endtime=2015-01-15";
 var minMagnitude = "&minmagnitude=7";
 var earthquakeData = [];
-var indexesByDistance = [];
+var keyToSortBy = 'magnitude';
 var carouselArray = [];
 var carouselIndex = 0;
 var earth;
@@ -13,6 +13,7 @@ $(document).ready(function() {
 	initializeCarousel();
 	initializeCarouselEndButtons();
 	initializeSubmitButton();
+	initializeCardOptions();
 	// let test = findDistance(39.7392, 104.9903, 32.7767, 96.7970);
 	// console.log(test/1000);
 	//should be 1066.30 kilometers
@@ -46,17 +47,18 @@ function createEarthquakeData(data) {
 		earthquakeData[i].felt = data.features[i].properties.felt;
 		earthquakeData[i].alert = data.features[i].properties.alert;
 		earthquakeData[i].mmi = data.features[i].properties.mmi;
-		earthquakeData[i].cardData = createEarthquakeCard(earthquakeData[i]);
+		earthquakeData[i].cardData = createEarthquakeCard(earthquakeData[i], keyToSortBy);
 	}
 	initializeGlobe();
-	createSortedCarouselArray('magnitude');
 	populateCarousel();
-	console.log(earthquakeData);
-	console.log(carouselArray);
+	// console.log(earthquakeData);
+	// console.log(carouselArray);
 }
 
 
 function populateCarousel() {
+	$('#carousel-cards').empty();
+	createSortedCarouselArray(keyToSortBy);
 	for (var i = 0; i < 4; i++) {
 		$('#carousel-cards').append(carouselArray[i]);
 	}
@@ -90,19 +92,26 @@ function moveCarouselLeft() {
 
 
 function createSortedCarouselArray(key) {
+	carouselArray = [];
 	let sorted = earthquakeData.sort(function(a,b) {
-		return a.key - b.key;
+		return b[key] * 10 - a[key] * 10;
 	});
 	for (var i = 0; i < sorted.length; i++) {
 		carouselArray.push(sorted[i].cardData);
 	}
+	// console.log(sorted.length)
+	// for (let x = 0; x < sorted.length; x++) {
+	// 	console.log('sorted:');
+	// 	console.log(sorted[x][key]);
+	// 	console.log('unsorted:');
+	// 	console.log(earthquakeData[x][key])
+	// }
 }
 
-
-
-function createEarthquakeCard(earthquake) {
+function createEarthquakeCard(earthquake, key) {
+	let keyText = createKeyText(key);
 	let coordString = earthquake.latitude + "   " + earthquake.longitude;
-	let $cardContainer = $('<div>').addClass('card').append($('<div>').addClass('card-header text-center').text(earthquake.magnitude));
+	let $cardContainer = $('<div>').addClass('card').append($('<div>').addClass('card-header text-center').text(keyText + earthquake[key]));
 	let $cardBlock = $('<div>').addClass('card-block');
 	let $location = $('<p>').addClass('card-text text-small').text(earthquake.location);
 	let $detailsButton = $('<button>').text("Details").addClass('btn btn-primary btn-sm').attr('data-index', earthquake.index);
@@ -110,6 +119,26 @@ function createEarthquakeCard(earthquake) {
 	$cardContainer.append($cardBlock);
 	$cardContainer.append($('<div>').addClass('card-footer').append($detailsButton));
 	return $cardContainer;
+}
+
+function createKeyText(key) {
+	let keyArray = key.split('');
+	keyArray[0] = keyArray[0].toUpperCase();
+	return keyArray.join('') + ': ';
+}
+
+function initializeCardOptions() {
+	$('#card-options').change(function() {
+		keyToSortBy = $('#card-options option:selected').attr('value');
+		createNewEarthquakeCards();
+	});
+}
+
+function createNewEarthquakeCards() {
+	for (var i = 0; i < earthquakeData.length; i++) {
+		earthquakeData[i].cardData = createEarthquakeCard(earthquakeData[i], keyToSortBy);
+	}
+	populateCarousel();
 }
 
 
