@@ -3,12 +3,15 @@ var endTime = "&endtime=2015-01-15";
 var minMagnitude = "&minmagnitude=7";
 var earthquakeData = [];
 var indexesByDistance = [];
+var carouselArray = [];
+var carouselIndex = 0;
 var earth;
 
 
 $(document).ready(function() {
 	getEarthquakeInfo();
 	initializeCarousel();
+	initializeCarouselEndButtons();
 	initializeSubmitButton();
 	// let test = findDistance(39.7392, 104.9903, 32.7767, 96.7970);
 	// console.log(test/1000);
@@ -45,30 +48,63 @@ function createEarthquakeData(data) {
 		earthquakeData[i].mmi = data.features[i].properties.mmi;
 		earthquakeData[i].cardData = createEarthquakeCard(earthquakeData[i]);
 	}
-	console.log(earthquakeData);
 	initializeGlobe();
+	createSortedCarouselArray('magnitude');
+	populateCarousel();
+	console.log(earthquakeData);
+	console.log(carouselArray);
 }
 
 
-// function createEarthquakeCard(earthquake) {
-// 	let $cardContainer = $('<div>').addClass('card').append($('<div>').addClass('card-header text-center').text(earthquake.properties.mag));
-// 	let $cardBlock = $('<div>').addClass('card-block'); //.append($('<div>').addClass('card-title text-center').text('Location'));
-// 	let $location = $('<p>').text(earthquake.properties.place).addClass('card-text');
-// 	let $detailsButton = $('<button>').text("Details").addClass('btn btn-primary btn-sm').attr('data-index', earthquake.index.toString());
-// 	$cardBlock.append($location);
-// 	$cardContainer.append($cardBlock);
-// 	$cardContainer.append($('<div>').addClass('card-footer').append($detailsButton));
-// 	earthquakeCards.push($cardContainer);
-// 		if(earthquakeCards.length < 6) {
-// 			$('#carouselcontainer').append($cardContainer);
-// 		}
-// }
+function populateCarousel() {
+	for (var i = 0; i < 4; i++) {
+		$('#carousel-cards').append(carouselArray[i]);
+	}
+}
+
+
+function moveCarouselRight() {
+	if(carouselIndex + 4 > carouselArray.length) {
+		return;
+	}
+	$('#carousel-cards').empty().hide();
+	carouselIndex += 4;
+	for (var i = carouselIndex; i < carouselIndex + 4; i++) {
+		$('#carousel-cards').append(carouselArray[i]);
+	}
+	$('#carousel-cards').fadeIn(300);
+}
+
+
+function moveCarouselLeft() {
+	if(carouselIndex - 4 < 0) {
+		return;
+	}
+	$('#carousel-cards').empty().hide();
+	carouselIndex -= 4;
+	for (var i = carouselIndex; i < carouselIndex + 4; i++) {
+		$('#carousel-cards').append(carouselArray[i]);
+	}
+	$('#carousel-cards').fadeIn(300);
+}
+
+
+function createSortedCarouselArray(key) {
+	let sorted = earthquakeData.sort(function(a,b) {
+		return a.key - b.key;
+	});
+	for (var i = 0; i < sorted.length; i++) {
+		carouselArray.push(sorted[i].cardData);
+	}
+}
+
+
 
 function createEarthquakeCard(earthquake) {
 	let coordString = earthquake.latitude + "   " + earthquake.longitude;
-	let $cardContainer = $('<div>').addClass('card').append($('<div>').addClass('card-header text-center').text(coordString));
+	let $cardContainer = $('<div>').addClass('card').append($('<div>').addClass('card-header text-center').text(earthquake.magnitude));
 	let $cardBlock = $('<div>').addClass('card-block');
-	let $location = $('<p>').addClass('card-text');
+	let $location = $('<p>').addClass('card-text text-small').text(earthquake.location);
 	let $detailsButton = $('<button>').text("Details").addClass('btn btn-primary btn-sm').attr('data-index', earthquake.index);
 	$cardBlock.append($location);
 	$cardContainer.append($cardBlock);
@@ -78,7 +114,7 @@ function createEarthquakeCard(earthquake) {
 
 
 function initializeCarousel() {
-	$('#carouselcontainer').on('click','.btn', function() {
+	$('#carousel-cards').on('click','.btn', function() {
 		let index = $(this).attr('data-index');
 		createDetailContent(index);
 		centerGlobeOnEarthquake(index);
@@ -109,26 +145,10 @@ function initializeGlobeMarkerListener() {
 	$('.globe-container').on('click', '.we-pm-icon', function() {
 		let index = $(this).attr('data-index');
 		createDetailContent(index);
-		updateEarthquakeDistances(index);
-		// console.log(earthquakeData);
+		// updateEarthquakeDistances(index);
 	});
 }
 
-
-// function createDetailContent(index) {
-// 	$('#detailcontainer').empty();
-// 	let $detailsCard = $('<div>').addClass('card detailscard');
-// 	$detailsCard.append($('<div>').addClass('card-header').text("Details"));
-// 	let $detailsCardBlock = $('<div>').addClass('card-block');
-// 	$detailsCardBlock.append($('<h3>').addClass('card-title text-center').text(earthquakeData[index].properties.place));
-// 	let $detailsList = $('<ul>').addClass('list-group');
-// 	$detailsList.append($('<li>').addClass('list-group-item').text("Alert: " +earthquakeData[index].properties.alert));
-// 	$detailsList.append($('<li>').addClass('list-group-item').text("Felt: " +earthquakeData[index].properties.felt));
-// 	$detailsList.append($('<li>').addClass('list-group-item').text("Tsunami: " +earthquakeData[index].properties.tsunami));
-// 	$detailsCardBlock.append($detailsList);
-// 	$detailsCard.append($detailsCardBlock);
-// 	$('#detailcontainer').append($detailsCard);
-// }
 function createDetailContent(index) {
 	let coordString = earthquakeData[index].latitude.toString() + "   " + earthquakeData[index].longitude.toString();
 	$('#detailcontainer').empty();
@@ -158,8 +178,8 @@ function initializeSubmitButton() {
 
 
 function removeLastSearch() {
-	$('#carouselcontainer').empty();
-	$('#detailcontainer').empty();
+	$('#carousel-cards').empty();
+	// $('#detailcontainer').empty();
 	$('.mapcontainer').empty();
 	$('.mapcontainer').append('<div>').addClass("globe-container").attr('id', 'earth_div');
 	earthquakeData = [];
@@ -180,56 +200,66 @@ function centerGlobeOnEarthquake(index) {
 	earth.panTo([latitude,longitude]);
 }
 
-function updateEarthquakeDistances(selected) {
-	let selectedLat = Number(earthquakeData[selected].latitude);
-	let selectedLon = Number(earthquakeData[selected].longitude);
-	for (let i = 0; i < earthquakeData.length; i++) {
-		let checkLat = Number(earthquakeData[i].latitude);
-		let checkLon = Number(earthquakeData[i].longitude);
-		earthquakeData[i].distanceFromSelected = findDistance(selectedLat, selectedLon, checkLat, checkLon);
-		// console.log(earthquakeData[i].distanceFromSelected);
-	}
-	findClosestQuakes(5);
-}
+// function updateEarthquakeDistances(selected) {
+// 	let selectedLat = Number(earthquakeData[selected].latitude);
+// 	let selectedLon = Number(earthquakeData[selected].longitude);
+// 	for (let i = 0; i < earthquakeData.length; i++) {
+// 		let checkLat = Number(earthquakeData[i].latitude);
+// 		let checkLon = Number(earthquakeData[i].longitude);
+// 		earthquakeData[i].distanceFromSelected = findDistance(selectedLat, selectedLon, checkLat, checkLon);
+// 		// console.log(earthquakeData[i].distanceFromSelected);
+// 	}
+// 	findClosestQuakes(4);
+// }
 
 //  Haversine method
-function findDistance(lat1,long1,lat2,long2) {
-	let radius = 6378137;
-	let deltaLat = lat2-lat1;
-	let deltaLong = long2-long1;
-	let angle = 2 * Math.asin( Math.sqrt(Math.pow(Math.sin(deltaLat/2), 2) + Math.cos(lat1) * Math.cos(lat2) * Math.pow(Math.sin(deltaLong/2), 2)));
-	// let angle = 2 * Math.atan2( Math.sqrt(Math.pow(Math.sin(deltaLat/2), 2) + Math.cos(lat1) * Math.cos(lat2) * Math.pow(Math.sin(deltaLong/2), 2)));
+// function findDistance(lat1,long1,lat2,long2) {
+// 	let radius = 6378137;
+// 	let deltaLat = lat2-lat1;
+// 	let deltaLong = long2-long1;
+// 	let angle = 2 * Math.asin( Math.sqrt(Math.pow(Math.sin(deltaLat/2), 2) + Math.cos(lat1) * Math.cos(lat2) * Math.pow(Math.sin(deltaLong/2), 2)));
+// 	// let angle = 2 * Math.atan2( Math.sqrt(Math.pow(Math.sin(deltaLat/2), 2) + Math.cos(lat1) * Math.cos(lat2) * Math.pow(Math.sin(deltaLong/2), 2)));
+//
+// 	return angle * radius;
+// }
 
-	return angle * radius;
+// function findClosestQuakes(num) {
+// 	let distances = [];
+// 	for (let x = 0; x < earthquakeData.length; x++) {
+// 		distances.push(earthquakeData[x].distanceFromSelected);
+// 	}
+// 	let sortedDistances = distances.sort(function(a,b) { return a - b; });
+// 	let foundQuakesIndexes = [];
+// 	for (var i = 1; i < num + 1; i++) {
+// 		for(let j = 0; j < earthquakeData.length; j++) {
+// 			if(sortedDistances[i] === earthquakeData[j].distanceFromSelected) {
+// 				foundQuakesIndexes.push(j);
+// 			}
+// 		}
+// 	}
+// 	// console.log(foundQuakesIndexes);
+// 	populateCarousel(foundQuakesIndexes);
+// }
+
+// function populateCarousel(indexes) {
+// 	$('#carousel-cards').empty();
+// 	for (var i = 0; i < indexes.length; i++) {
+// 		$(earthquakeData[indexes[i]].cardData).find('.card-text').text(Math.floor(earthquakeData[indexes[i]].distanceFromSelected/1000)+"km");
+// 		$('#carousel-cards').append(earthquakeData[indexes[i]].cardData);
+// 	}
+// }
+
+
+function initializeCarouselEndButtons() {
+	$('#carousel-left-slow').click(function() {
+		moveCarouselLeft();
+	});
+	$('#carousel-right-slow').click(function() {
+		moveCarouselRight();
+	});
 }
 
-function findClosestQuakes(num) {
-	let distances = [];
-	for (let x = 0; x < earthquakeData.length; x++) {
-		distances.push(earthquakeData[x].distanceFromSelected);
-	}
-	let sortedDistances = distances.sort(function(a,b) { return a - b; });
-	console.log(sortedDistances);
-	let foundQuakesIndexes = [];
-	for (var i = 1; i < num + 1; i++) {
-		for(let j = 0; j < earthquakeData.length; j++) {
-			if(sortedDistances[i] === earthquakeData[j].distanceFromSelected) {
-				foundQuakesIndexes.push(j);
-			}
-		}
-	}
-	console.log(foundQuakesIndexes);
-	populateCarousel(foundQuakesIndexes);
-}
 
-function populateCarousel(indexes) {
-	$('#carouselcontainer').empty();
-	for (var i = 0; i < indexes.length; i++) {
-		console.log(earthquakeData[indexes[i]].cardData);
-		$(earthquakeData[indexes[i]].cardData).find('.card-text').text(Math.floor(earthquakeData[indexes[i]].distanceFromSelected/1000)+"km");
-		$('#carouselcontainer').append(earthquakeData[indexes[i]].cardData);
-	}
-}
 
 
 

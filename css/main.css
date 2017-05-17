@@ -36,6 +36,15 @@ main {
 	background-color: rgba(117, 117, 117, 0.28);
 	box-shadow: .5px .5px 1px #3d3d3d;
 }
+
+.carousel-left {
+	height: 100%;
+	width: 100%;
+}
+.carousel-right {
+	height: 100%;
+	width: 100%;
+}
 .browser-top {
 	height: 55%;
 }
@@ -47,13 +56,33 @@ main {
 	background-color: rgba(117, 117, 117, 0.28);
 	box-shadow: .5px .5px 1px #3d3d3d;
 }
-.card {
-	height: 95%;
-	width: 18%;
+.carousel-cards {
+	height: 100%;
+	width: 100%;
+	display: flex;
+	flex-flow: row;
+	align-items: center;
+	margin: 0;
+	padding: 0;
+}
+.carousel-cards .card {
+	height: 90%;
+	width: 26%;
 	margin: 1%;
 	box-shadow: 1px 1px 2px #3d3d3d;
 	display: flex;
 	flex-direction: column;
+	font-size: .7em;
+	padding: 0;
+	overflow: hidden;
+}
+.carousel-cards .card-block {
+	padding: 5%;
+	margin: 0;
+	overflow: hidden;
+}
+.carousel-cards .card-header {
+	font-size: 1.3em;
 }
 .detailscard {
 	width: 98%;
@@ -63,22 +92,6 @@ main {
 .globe-container {
 	width: 100%;
 	height: 500px;
-}
-.card-block {
-	padding: 5%;
-}
-.card-text {
-	font-size: .8em;
-	margin: 0;
-}
-.details-button {
-	align-self: flex-end;
-}
-.map-button {
-	align-self: flex-end;
-}
-.custom-select {
-	margin: 3%;
 }
 .form-group {
 	margin: 0;
@@ -110,6 +123,49 @@ main {
 .loadingimage {
 	background-color: rgba(155, 155, 155, 0);
 }
-.card-text {
-	margin-top: 40%;
+.carousel-left {
+	height: 100%;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	opacity: .7;
+}
+.carousel-right {
+	height: 100%;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	opacity: .7;
+}
+.carousel-left-slow {
+	height: 90%;
+	width: 90%;
+	background-color: gray;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	box-shadow: 1px 1px 2px #3d3d3d;
+}
+.left-arrow {
+  	border-top: 30px solid transparent;
+  	border-bottom: 30px solid transparent;
+  	border-right:15px solid #4c4c4c;
+}
+.carousel-right-slow {
+	height: 90%;
+	width: 90%;
+	background-color: gray;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	box-shadow: 1px 1px 2px #3d3d3d;
+}
+.right-arrow {
+  	border-top: 30px solid transparent;
+  	border-bottom: 30px solid transparent;
+  	border-left:15px solid #4c4c4c;
+}
+.arrow {
+	width: 0;
+	height: 0;
 }
