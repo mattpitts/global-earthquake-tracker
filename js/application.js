@@ -10,9 +10,10 @@ var dataAverages = {};
 var maxValues = {};
 var minValues = {};
 var earth;
+var $carouselCards;
 
 
-$(document).ready(function() {
+$(function() {
 	getEarthquakeInfo();
 	initializeCarousel();
 	initializeCarouselEndButtons();
@@ -24,14 +25,10 @@ $(document).ready(function() {
 function getEarthquakeInfo() {
 	removeLastSearch();
 	$('#submit').attr('disabled','disabled');
-	$.get("https://earthquake.usgs.gov/fdsnws/event/1/query?format=geojson"
-		+ startTime
-		+ endTime
-		+ minMagnitude
-		+ "&limit=400").then(function(data) {
-			createEarthquakeData(data);
-			$('#submit').removeAttr('disabled');
-			$('.loadingscreen').fadeOut(250);
+	$.get(`https://earthquake.usgs.gov/fdsnws/event/1/query?format=geojson${startTime}${endTime}${minMagnitude}&limit=400`).then(function(data) {
+		createEarthquakeData(data);
+		$('#submit').removeAttr('disabled');
+		$('.loadingscreen').fadeOut(250);
 	});
 }
 
@@ -40,22 +37,7 @@ function createEarthquakeData(data) {
 	earthquakeData = [];
 	dataTotals = { magTotal: 0, depthTotal: 0, mmiTotal: 0, feltTotal: 0};
 	for (let i = 0; i < data.features.length; i++) {
-		earthquakeData[i] = {};
-		earthquakeData[i].index = i;
-		earthquakeData[i].latitude = data.features[i].geometry.coordinates[1];
-		earthquakeData[i].longitude = data.features[i].geometry.coordinates[0];
-		earthquakeData[i].depth = data.features[i].geometry.coordinates[2];
-		earthquakeData[i].magnitude = data.features[i].properties.mag;
-		earthquakeData[i].location = data.features[i].properties.place;
-		earthquakeData[i].date = createParsedDate(data.features[i].properties.time);
-		if(data.features[i].properties.felt === null) {
-			earthquakeData[i].felt = 0;
-		}
-		else {
-			earthquakeData[i].felt = data.features[i].properties.felt;
-		}
-		earthquakeData[i].alert = data.features[i].properties.alert;
-		earthquakeData[i].mmi = data.features[i].properties.mmi;
+		earthquakeData.push(createEarthquakeObject(data.features[i], i));
 		earthquakeData[i].cardData = createEarthquakeCard(earthquakeData[i], keyToSortBy);
 		addToDataTotals(earthquakeData[i]);
 	}
@@ -64,6 +46,20 @@ function createEarthquakeData(data) {
 	findMinValues();
 	initializeGlobe();
 	populateCarousel();
+}
+
+function createEarthquakeObject(earthquake, index) {
+	return {
+		index: index,
+		latitude: earthquake.geometry.coordinates[1],
+		longitude: earthquake.geometry.coordinates[0],
+		depth: earthquake.geometry.coordinates[2],
+		magnitude: earthquake.properties.mag,
+		location: earthquake.properties.place,
+		date: createParsedDate(earthquake.properties.time),
+		felt: earthquake.properties.felt,
+		mmi: earthquake.properties.mmi
+	};
 }
 
 
@@ -133,10 +129,10 @@ function findMinValues() {
 
 function populateCarousel() {
 	carouselIndex = 0;
-	$('#carousel-cards').empty();
+	$carouselCards.empty();
 	createSortedCarouselArray(keyToSortBy);
 	for (var i = 0; i < 4; i++) {
-		$('#carousel-cards').append(carouselArray[i]);
+		$carouselCards.append(carouselArray[i]);
 	}
 }
 
@@ -145,12 +141,12 @@ function moveCarouselRight() {
 	if(carouselIndex + 4 > carouselArray.length) {
 		return;
 	}
-	$('#carousel-cards').empty().hide();
+	$carouselCards.empty().hide();
 	carouselIndex += 4;
 	for (var i = carouselIndex; i < carouselIndex + 4; i++) {
-		$('#carousel-cards').append(carouselArray[i]);
+		$carouselCards.append(carouselArray[i]);
 	}
-	$('#carousel-cards').fadeIn(300);
+	$carouselCards.fadeIn(300);
 }
 
 
@@ -158,12 +154,12 @@ function moveCarouselLeft() {
 	if(carouselIndex - 4 < 0) {
 		return;
 	}
-	$('#carousel-cards').empty().hide();
+	$carouselCards.empty().hide();
 	carouselIndex -= 4;
 	for (var i = carouselIndex; i < carouselIndex + 4; i++) {
-		$('#carousel-cards').append(carouselArray[i]);
+		$carouselCards.append(carouselArray[i]);
 	}
-	$('#carousel-cards').fadeIn(300);
+	$carouselCards.fadeIn(300);
 }
 
 
@@ -173,11 +169,10 @@ function createSortedCarouselArray(key) {
 	sorted.sort(function(a,b) {
 		return b[key] * 10 - a[key] * 10;
 	});
-	console.log(earthquakeData);
 	for (var i = 0; i < sorted.length; i++) {
 		carouselArray.push(sorted[i].cardData);
 	}
-	createDetailContent(sorted[0].index);
+	createDetailContent(sorted[0]);
 	centerGlobeOnEarthquake(sorted[0].index);
 	return sorted;
 }
@@ -185,7 +180,6 @@ function createSortedCarouselArray(key) {
 
 function createEarthquakeCard(earthquake, key) {
 	let keyText = createKeyText(key);
-	let coordString = earthquake.latitude + "   " + earthquake.longitude;
 	let $cardContainer = $('<div>').addClass('card').append($('<div>').addClass('card-header text-center').text(keyText + earthquake[key]));
 	let $cardBlock = $('<div>').addClass('card-block');
 	let $location = $('<p>').addClass('card-text text-small').text(earthquake.location);
@@ -221,7 +215,8 @@ function createNewEarthquakeCards() {
 
 
 function initializeCarousel() {
-	$('#carousel-cards').on('click','.btn', function() {
+	$carouselCards = $('#carousel-cards');
+	$carouselCards.on('click','.btn', function() {
 		let index = $(this).attr('data-index');
 		createDetailContent(index);
 		centerGlobeOnEarthquake(index);
@@ -255,7 +250,6 @@ function updateGlobeMarkers(earth) {
 		newMarker.element.childNodes["0"].setAttribute('data-index', i);
 		newMarker.addTo(earth);
 		earthquakeData[i].marker = newMarker;
-		console.log(newMarker);
 	}
 	initializeGlobeMarkerListener();
 }
@@ -264,41 +258,38 @@ function updateGlobeMarkers(earth) {
 function initializeGlobeMarkerListener() {
 	$('.globe-container').on('click', '.we-pm-icon', function() {
 		let index = $(this).attr('data-index');
-		createDetailContent(index);
-		// updateEarthquakeDistances(index);
+		createDetailContent(earthquakeData[index]);
 	});
 }
 
 
-function createDetailContent(index) {
-	let coordString = (Math.round(earthquakeData[index].latitude * 100) /100).toString() + "   " + (Math.round(earthquakeData[index].longitude * 100) /100).toString();
+function createDetailContent(earthquake) {
 	$('#detailcontainer').empty();
 	let $detailsCard = $('<div>').addClass('card detailscard');
-	$detailsCard.append($('<div>').addClass('card-header').text(earthquakeData[index].date));
+	$detailsCard.append($('<div>').addClass('card-header').text(earthquake.date));
 	let $detailsCardBlock = $('<div>').addClass('card-block');
-	let $detailsList = createDetailsList(index);
+	let $detailsList = createDetailsList(earthquake);
 	$detailsCardBlock.append($detailsList);
 	$detailsCard.append($detailsCardBlock);
 	$('#detailcontainer').append($detailsCard);
-	setGraphValues(index);
+	setGraphValues(earthquake);
 }
 
 
-function createDetailsList(index) {
+function createDetailsList(earthquake) {
 	let $detailsList = $('<ul>').addClass('list-group');
-	$detailsList.append($('<li>').addClass('list-group-item small').text("Location: " + earthquakeData[index].location));
-	$detailsList.append($('<li>').addClass('list-group-item small').text("Modified Mercali Intensity: " + earthquakeData[index].mmi));
-	$detailsList.append($('<li>').addClass('list-group-item small').text("Magnitude: " + earthquakeData[index].magnitude));
-	$detailsList.append($('<li>').addClass('list-group-item small').text("Depth: " + earthquakeData[index].depth + 'km'));
+	$detailsList.append($('<li>').addClass('list-group-item small').text("Location: " + earthquake.location));
+	$detailsList.append($('<li>').addClass('list-group-item small').text("Modified Mercali Intensity: " + earthquake.mmi));
+	$detailsList.append($('<li>').addClass('list-group-item small').text("Magnitude: " + earthquake.magnitude));
+	$detailsList.append($('<li>').addClass('list-group-item small').text("Depth: " + earthquake.depth + 'km'));
 	return $detailsList;
 }
 
 
-function setGraphValues(index) {
-	// let magRange = maxValues.magnitude - minValues.magnitude;
-	let magHeight = (((earthquakeData[index].magnitude - minValues.magnitude) / (maxValues.magnitude - minValues.magnitude)) * 100) + '%';
-	let depthHeight = ((earthquakeData[index].depth / maxValues.depth) * 100) + '%';
-	let mmiHeight = (((earthquakeData[index].mmi - minValues.mmi) / (maxValues.mmi - minValues.mmi)) * 100) + '%';
+function setGraphValues(earthquake) {
+	let magHeight = (((earthquake.magnitude - minValues.magnitude) / (maxValues.magnitude - minValues.magnitude)) * 100) + '%';
+	let depthHeight = ((earthquake.depth / maxValues.depth) * 100) + '%';
+	let mmiHeight = (((earthquake.mmi - minValues.mmi) / (maxValues.mmi - minValues.mmi)) * 100) + '%';
 	$('.graph-left').css('height', magHeight);
 	$('.graph-center').css('height', depthHeight);
 	$('.graph-right').css('height', mmiHeight);
@@ -318,8 +309,7 @@ function initializeSubmitButton() {
 
 
 function removeLastSearch() {
-	$('#carousel-cards').empty();
-	// $('#detailcontainer').empty();
+	$('#carouselCards').empty();
 	$('.mapcontainer').empty();
 	$('.mapcontainer').append('<div>').addClass("globe-container").attr('id', 'earth_div');
 	earthquakeData = [];
@@ -386,8 +376,22 @@ function centerGlobeOnEarthquake(index) {
 // }
 
 
-
-
+// function changeMarkerIcon(index) {
+// 	earthquakeData[index].marker.removeFrom(earth);
+// 	let newMarker = WE.marker([earthquakeData[index].latitude,earthquakeData[index].longitude],'goldStar');
+// 	newMarker.element.childNodes["0"].setAttribute('data-index', index);
+// 	newMarker.addTo(earth);
+// }
+//
+//
+// var goldStar = {
+//           path: 'M 125,5 155,90 245,90 175,145 200,230 125,180 50,230 75,145 5,90 95,90 z',
+//           fillColor: 'yellow',
+//           fillOpacity: 0.8,
+//           scale: 1,
+//           strokeColor: 'gold',
+//           strokeWeight: 14
+//         };
 
 
 
