@@ -5,6 +5,9 @@ var earthquakeData = [];
 var keyToSortBy = 'magnitude';
 var carouselArray = [];
 var carouselIndex = 0;
+var dataTotals = {};
+var dataAverages = {};
+var maxValues = {}
 var earth;
 
 
@@ -36,7 +39,9 @@ function getEarthquakeInfo() {
 
 
 function createEarthquakeData(data) {
-	for (var i = 0; i < data.features.length; i++) {
+	earthquakeData = [];
+	dataTotals = { magTotal: 0, depthTotal: 0, mmiTotal: 0, feltTotal: 0};
+	for (let i = 0; i < data.features.length; i++) {
 		earthquakeData[i] = {};
 		earthquakeData[i].index = i;
 		earthquakeData[i].latitude = data.features[i].geometry.coordinates[1];
@@ -48,15 +53,50 @@ function createEarthquakeData(data) {
 		earthquakeData[i].alert = data.features[i].properties.alert;
 		earthquakeData[i].mmi = data.features[i].properties.mmi;
 		earthquakeData[i].cardData = createEarthquakeCard(earthquakeData[i], keyToSortBy);
+		addToDataTotals(earthquakeData[i]);
 	}
+	calculateDataAverages();
+	findMaxValues();
 	initializeGlobe();
 	populateCarousel();
+
 	// console.log(earthquakeData);
 	// console.log(carouselArray);
 }
 
+function addToDataTotals(data) {
+	dataTotals.magTotal += data.magnitude;
+	dataTotals.depthTotal += data.depth;
+	dataTotals.mmiTotal += data.mmi;
+	dataTotals.feltTotal += data.felt;
+}
+function calculateDataAverages() {
+	dataAverages.magnitude = dataTotals.magTotal / earthquakeData.length;
+	dataAverages.depth = dataTotals.depthTotal / earthquakeData.length;
+	dataAverages.mmi = dataTotals.mmiTotal / earthquakeData.length;
+	dataAverages.felt = dataTotals.feltTotal / earthquakeData.length;
+}
+function findMaxValues() {
+	maxValues = { magnitude: 0, mmi: 0, depth: 0, felt: 0};
+	for (var i = 0; i < earthquakeData.length; i++) {
+		if(earthquakeData[i].magnitude > maxValues.magnitude) {
+			maxValues.magnitude = earthquakeData[i].magnitude;
+		}
+		if(earthquakeData[i].depth > maxValues.depth) {
+			maxValues.depth = earthquakeData[i].depth;
+		}
+		if(earthquakeData[i].mmi > maxValues.mmi) {
+			maxValues.mmi = earthquakeData[i].mmi;
+		}
+		if(earthquakeData[i].felt > maxValues.felt) {
+			maxValues.felt = earthquakeData[i].felt;
+		}
+	}
+	console.log(maxValues);
+}
 
 function populateCarousel() {
+	carouselIndex = 0;
 	$('#carousel-cards').empty();
 	createSortedCarouselArray(keyToSortBy);
 	for (var i = 0; i < 4; i++) {
@@ -93,12 +133,15 @@ function moveCarouselLeft() {
 
 function createSortedCarouselArray(key) {
 	carouselArray = [];
-	let sorted = earthquakeData.sort(function(a,b) {
+	let sorted = earthquakeData.slice();
+	sorted.sort(function(a,b) {
 		return b[key] * 10 - a[key] * 10;
 	});
+	console.log(earthquakeData);
 	for (var i = 0; i < sorted.length; i++) {
 		carouselArray.push(sorted[i].cardData);
 	}
+	createDetailContent(sorted[0].index);
 	// console.log(sorted.length)
 	// for (let x = 0; x < sorted.length; x++) {
 	// 	console.log('sorted:');
@@ -106,6 +149,7 @@ function createSortedCarouselArray(key) {
 	// 	console.log('unsorted:');
 	// 	console.log(earthquakeData[x][key])
 	// }
+	return sorted;
 }
 
 function createEarthquakeCard(earthquake, key) {
@@ -160,13 +204,15 @@ function initializeGlobe() {
 
 
 function updateGlobeMarkers(earth) {
-	for (var i = 0; i < earthquakeData.length; i++) {
+	for (let i = 0; i < earthquakeData.length; i++) {
 		let latitude = Number(earthquakeData[i].latitude);
 		let longitude = Number(earthquakeData[i].longitude);
 		let newMarker = WE.marker([latitude,longitude]);
 		newMarker.element.childNodes["0"].setAttribute('data-index', i);
 		newMarker.addTo(earth);
+		earthquakeData[i].marker = newMarker;
 	}
+	console.log(earthquakeData);
 	initializeGlobeMarkerListener();
 }
 
@@ -192,6 +238,15 @@ function createDetailContent(index) {
 	$detailsCardBlock.append($detailsList);
 	$detailsCard.append($detailsCardBlock);
 	$('#detailcontainer').append($detailsCard);
+	setGraphValues(index);
+}
+function setGraphValues(index) {
+	let magHeight = ((earthquakeData[index].magnitude / maxValues.magnitude) * 100) + '%';
+	let depthHeight = ((earthquakeData[index].depth / maxValues.depth) * 100) + '%';
+	let mmiHeight = ((earthquakeData[index].mmi / maxValues.mmi) * 100) + '%';
+	$('.graph-left').css('height', magHeight);
+	$('.graph-center').css('height', depthHeight);
+	$('.graph-right').css('height', mmiHeight);
 }
 
 function initializeSubmitButton() {

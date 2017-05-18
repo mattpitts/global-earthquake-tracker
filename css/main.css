@@ -29,7 +29,7 @@ main {
 	position: relative;
 }
 .carouselcontainer {
-	height: 40%;
+	height: 35%;
 	margin: 3% 1% 1% 1%;
 	padding: 1% 1% 1% 1%;
 	border-radius: 1%;
@@ -46,12 +46,15 @@ main {
 	width: 100%;
 }
 .browser-top {
-	height: 55%;
+	height: 59%;
+	flex-flow: row;
+	align-items: flex-end;
+	margin-top: 1%;
 }
 .detailcontainer {
 	height: 96%;
-	margin: 3% 3% 1% 3.3%;
-	padding: 1% 1% 1% 1%;
+	margin: 3% 0% 1% 3.3%;
+	padding: 1%;
 	border-radius: 1%;
 	background-color: rgba(117, 117, 117, 0.28);
 	box-shadow: .5px .5px 1px #3d3d3d;
@@ -64,9 +67,66 @@ main {
 	height: 98%;
 	margin: 1%;
 }
-.card-options {
+.graphcard {
 	display: flex;
+	flex-flow: column;
+	width: 98%;
+	height: 96%;
+	margin: 1%;
+	padding: 1%;
+	border-radius: 1%;
+	background-color: rgba(117, 117, 117, 0.28);
+	box-shadow: .5px .5px 1px #3d3d3d;
+}
+.graphheader-container {
+	height: 10%;
+	width: 100%;
+}
+.graphheader {
+	height: 15%;
+}
+.graphcontainer {
+	height:82%;
+	margin: 0;
 	align-items: flex-end;
+	background-color: white;
+	padding: 2%;
+	border-radius: 1%;
+}
+.graph {
+	height: 100%;
+	width: 100%;
+	display: inline-flex;
+	align-items: baseline;
+	justify-content: space-between;
+	padding: 0;
+	margin: 0;
+	background-color: rgba(117, 117, 117, 0.28);
+	box-shadow: .5px .5px 1px #3d3d3d;
+}
+
+.graph-left {
+	width: 32%;
+	height: 100%;
+	background-color: yellow;
+}
+.graph-center {
+	width: 32%;
+	height: 40%;
+	background-color: blue;
+}
+.graph-right {
+	width:32%;
+	height: 10%;
+	background-color: red;
+}
+.searchcontainer {
+	height: 96%;
+	margin: 3% 3% 1% 3.3%;
+	padding: 1% 1% 1% 1%;
+	border-radius: 1%;
+	background-color: rgba(117, 117, 117, 0.28);
+	box-shadow: .5px .5px 1px #3d3d3d;
 }
 .carousel-cards {
 	height: 100%;
@@ -156,13 +216,13 @@ main {
 	background-color: #666666;
 }
 .carousel-left-slow:active {
-	background-color: black;
+	background-color: #c4c4c4;
 }
 .carousel-right-slow:hover {
 	background-color: #666666;
 }
 .carousel-right-slow:active {
-	background-color: black;
+	background-color: #c4c4c4;
 }
 .left-arrow {
   	border-top: 30px solid transparent;

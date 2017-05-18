@@ -25,6 +25,12 @@
 					<h1 class="maintitle-first">T</h1><h1 class="maintitle">racker</h1> -->
 				</div>
 				<div class="col-sm-5">
+					<select class="custom-select" id="card-options">
+						<option selected value="magnitude">Sort by Magnitude</option>
+						<option value="depth">Sort by Depth</option>
+						<option value="mmi">Sort by MMI</option>
+						<option value="felt">Population affected by shaking</option>
+					</select>
 
 				</div>
 				<div class="col-sm-3">
@@ -32,11 +38,8 @@
 						<div class="row">
 							<div class="col-sm-3">
 								<div class="form-group">
-									<label for="minimum-magnitude">Magnitude</label>
+									<label for="minimum-magnitude">Minimum Magnitude</label>
 	    							<input type="minimum-magnitude" class="form-control" id="minimum-magnitude" value="7">
-									<small class="form-text">Minimum</small>
-									<input type="maximum-magnitude" class="form-control" id="maximum-magnitude" value="10">
-									<small class="form-text">Maximum</small>
 	  							</div>
 							</div>
 							<div class="col-sm-6">
@@ -72,17 +75,63 @@
 				<div class="col-sm-5 browsercontainer">
 					<div class="row browser-top">
 						<div class="col-sm-6 detailcontainer" id="detailcontainer">
-							<p class="text-center">
+							<!-- <p class="text-center">
 								Click on a marker for details
-							</p>
+							</p> -->
+							<div class="card detailscard">
+							</div>
 						</div>
-						<div class="col-sm-5 card-options" id="card-options">
-							<select class="custom-select">
-  								<option selected value="magnitude">Sort by magnitude</option>
-  								<option value="depth">Sort by depth</option>
-  								<option value="mmi">Sort by MMI</option>
-  								<option value="felt">Sort by felt</option>
-							</select>
+						<!-- <div class="col-sm-5 graphcard" id="graph-container">
+							<div class = "card graphcontainer">
+								<div class="graphheader-container">
+									<div class="graphheader graphheader-left">
+
+									</div>
+									<div class="graphheader graphheader-center">
+
+									</div>
+									<div class="graphheader graphheader-right">
+
+									</div>
+								</div>
+								<div class="graph">
+									<div class="graph-left">
+
+									</div>
+									<div class="graph-center">
+
+									</div>
+									<div class="graph-right">
+
+									</div>
+								</div>
+							</div>
+						</div> -->
+						<div class="card graphcard">
+							<div class="card-header graphheader">
+								<div class="row">
+									<div class="col-sm-4">
+										<h6>Magnitude</h6>
+									</div>
+									<div class="col-sm-4">
+										<h6>Depth</h6>
+									</div>
+									<div class="col-sm-4">
+										<h6>MMI</h6>
+									</div>
+								</div>
+							</div>
+							<div class="row graphcontainer">
+								<div class="col-sm-4 graph-left">
+
+								</div>
+								<div class="col-sm-4 graph-center">
+
+								</div>
+								<div class="col-sm-4 graph-right">
+
+								</div>
+							</div>
 						</div>
 
 					</div>
