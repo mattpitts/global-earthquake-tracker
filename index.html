@@ -20,36 +20,35 @@
 			<header class="row">
 				<div class="col-sm-3">
 					<h1 class="maintitle" id="title">Global Earthquake Tracker</h1>
-					<!-- <h1 class="maintitle-first">G</h1><h1 class="maintitle">lobal </h1>
-					<h1 class="maintitle-first">E</h1><h1 class="maintitle">arthquake </h1>
-					<h1 class="maintitle-first">T</h1><h1 class="maintitle">racker</h1> -->
-				</div>
-				<div class="col-sm-5">
-					<select class="custom-select" id="card-options">
-						<option selected value="magnitude">Sort by Magnitude</option>
-						<option value="depth">Sort by Depth</option>
-						<option value="mmi">Sort by MMI</option>
-						<option value="felt">Population affected by shaking</option>
-					</select>
-
 				</div>
 				<div class="col-sm-3">
+
+				</div>
+				<div class="col-sm-5">
 					<form>
 						<div class="row">
-							<div class="col-sm-3">
-								<div class="form-group">
-									<label for="minimum-magnitude">Minimum Magnitude</label>
-	    							<input type="minimum-magnitude" class="form-control" id="minimum-magnitude" value="7">
-	  							</div>
-							</div>
+
 							<div class="col-sm-6">
 								<div class="form-group">
-									<label for="minimum-date">Date Range</label>
+									<label for="minimum-date">Start Date:</label>
 									<input type="minimum-date" class="form-control" id="minimum-date" value="2013-01-15">
-									<small class="form-text">Start</small>
+									<label for="maximum-date">End Date:</label>
 									<input type="maximum-date" class="form-control" id="maximum-date" value="2015-01-15">
-									<small class="form-text">End</small>
 								</div>
+							</div>
+							<div class="col-sm-4">
+
+								<div class="form-group">
+									<label for="minimum-magnitude">Min. Magnitude</label>
+	    							<input type="minimum-magnitude" class="form-control" id="minimum-magnitude" value="7">
+	  							</div>
+								<label for="card-options" class="text-small">Sort By:</label>
+								<select class="custom-select" name ="card-options" id="card-options">
+									<option selected value="magnitude">Magnitude</option>
+									<option value="depth">Depth</option>
+									<option value="mmi">Mercali Intensity Scale</option>
+									<option value="felt">Population affected by shaking</option>
+								</select>
 							</div>
 							<div class="col-sm-2 buttontest align-self-end">
 								<button type="submit" id="submit" class="btn btn-primary searchbutton">Search</button>
@@ -69,49 +68,18 @@
 					<div id="earth_div" class="globe-container">
 
 					</div>
-
-
 				</div>
 				<div class="col-sm-5 browsercontainer">
 					<div class="row browser-top">
 						<div class="col-sm-6 detailcontainer" id="detailcontainer">
-							<!-- <p class="text-center">
-								Click on a marker for details
-							</p> -->
 							<div class="card detailscard">
 							</div>
 						</div>
-						<!-- <div class="col-sm-5 graphcard" id="graph-container">
-							<div class = "card graphcontainer">
-								<div class="graphheader-container">
-									<div class="graphheader graphheader-left">
-
-									</div>
-									<div class="graphheader graphheader-center">
-
-									</div>
-									<div class="graphheader graphheader-right">
-
-									</div>
-								</div>
-								<div class="graph">
-									<div class="graph-left">
-
-									</div>
-									<div class="graph-center">
-
-									</div>
-									<div class="graph-right">
-
-									</div>
-								</div>
-							</div>
-						</div> -->
 						<div class="card graphcard">
 							<div class="card-header graphheader">
 								<div class="row">
 									<div class="col-sm-4">
-										<h6>Magnitude</h6>
+										<h6>Mag.</h6>
 									</div>
 									<div class="col-sm-4">
 										<h6>Depth</h6>
@@ -137,17 +105,11 @@
 					</div>
 					<div class="row carouselcontainer">
 						<div class="col-sm-1 carousel-left">
-							<!-- <div class="row"> -->
-								<!-- <div class="col-sm-6 carousel-left-fast" id="carousel-left-fast"> -->
+							<div class="col-sm-6 carousel-left-slow" id="carousel-left-slow">
+								<div class="left-arrow arrow">
 
-								<!-- </div> -->
-								<div class="col-sm-6 carousel-left-slow" id="carousel-left-slow">
-									<div class="left-arrow arrow">
-
-									</div>
 								</div>
-							<!-- </div> -->
-
+							</div>
 						</div>
 						<div class="col-sm-10 carousel-cards" id="carousel-cards">
 
@@ -157,17 +119,9 @@
 								<div class="right-arrow arrow">
 
 								</div>
-
 							</div>
-							<!-- <div class="col-sm-6 carousel-right-fast" id="carousel-right-fast">
-
-							</div> -->
-
 						</div>
-
-
 					</div>
-
 				</div>
 				<div class="col-sm-1">
 
