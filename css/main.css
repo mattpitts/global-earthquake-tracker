@@ -5,7 +5,7 @@ header {
 	padding: .5% 0 0 0;
 }
 .maintitle {
-	margin: 1% 0 0 4%;
+	margin: 1% 0 0 8%;
 	text-shadow: 1px 1px 1px #515151;
 	position: absolute;
 	z-index: 1000;
@@ -37,7 +37,7 @@ main {
 	height: auto;
 	max-height: 70vh;
 	padding: 0;
-	margin: 0;
+	margin: 1.5% 0 0 0;
 }
 .browsercontainer {
 	background-color: #c4c4c4;
