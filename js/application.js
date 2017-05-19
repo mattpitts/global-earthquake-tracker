@@ -247,7 +247,7 @@ function initializeCarouselEndButtons() {
 
 
 function initializeGlobe() {
-    var options = { zoom: 2.5, position: [17,132] };
+    var options = { zoom: 2.25, position: [17,132] };
     earth = new WE.map('earth_div', options);
 	WE.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}').addTo(earth);
 	updateGlobeMarkers(earth);
