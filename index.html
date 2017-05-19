@@ -7,6 +7,9 @@
 		<script src="js/jquery-3.2.1.js"></script>
 		<script src="js/tether.min.js"></script>
 		<script src="js/bootstrap.min.js"></script>
+		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.6.4/css/bootstrap-datepicker.css">
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.6.4/js/bootstrap-datepicker.js"></script>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/moment.min.js"></script>
 		<script src="https://www.webglearth.com/v2/api.js"></script>
 		<script src="js/application.js"></script>
 		<title>Global Earthquake Tracker</title>
@@ -41,15 +44,16 @@
 								<div class="form-group">
 									<label for="minimum-magnitude">Min. Magnitude</label>
 	    							<input type="minimum-magnitude" class="form-control" id="minimum-magnitude" value="7">
+									<label for="card-options" class="text-small">Sort By:</label>
+									<select class="custom-select" name ="card-options" id="card-options">
+										<option selected value="magnitude">Magnitude</option>
+										<option value="depth">Depth</option>
+										<option value="mmi">Mercali Intensity Scale</option>
+										<option value="felt">Population affected by shaking</option>
+									</select>
+								</div>
 	  							</div>
-								<label for="card-options" class="text-small">Sort By:</label>
-								<select class="custom-select" name ="card-options" id="card-options">
-									<option selected value="magnitude">Magnitude</option>
-									<option value="depth">Depth</option>
-									<option value="mmi">Mercali Intensity Scale</option>
-									<option value="felt">Population affected by shaking</option>
-								</select>
-							</div>
+
 							<div class="col-sm-2 buttontest align-self-end">
 								<button type="submit" id="submit" class="btn btn-primary searchbutton">Search</button>
 							</div>

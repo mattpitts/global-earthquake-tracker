@@ -19,6 +19,8 @@ $(function() {
 	initializeCarouselEndButtons();
 	initializeSubmitButton();
 	initializeCardOptions();
+	$('#minimum-date').datepicker({});
+	$('#maximum-date').datepicker({});
 });
 
 
@@ -218,7 +220,7 @@ function initializeCarousel() {
 	$carouselCards = $('#carousel-cards');
 	$carouselCards.on('click','.btn', function() {
 		let index = $(this).attr('data-index');
-		createDetailContent(index);
+		createDetailContent(earthquakeData[index]);
 		centerGlobeOnEarthquake(index);
 	});
 }
@@ -287,9 +289,12 @@ function createDetailsList(earthquake) {
 
 
 function setGraphValues(earthquake) {
+	console.log(minValues);
+	console.log(maxValues);
 	let magHeight = (((earthquake.magnitude - minValues.magnitude) / (maxValues.magnitude - minValues.magnitude)) * 100) + '%';
 	let depthHeight = ((earthquake.depth / maxValues.depth) * 100) + '%';
-	let mmiHeight = (((earthquake.mmi - minValues.mmi) / (maxValues.mmi - minValues.mmi)) * 100) + '%';
+	let mmiHeight = (((earthquake.mmi - minValues.mmi) / (maxValues.mmi - minValues.mmi)) * 100) + '%';// doesnt work; need to remove null values
+	// let mmiHeight = (((earthquake.mmi - 0) / (maxValues.mmi - 0)) * 100) + '%';
 	$('.graph-left').css('height', magHeight);
 	$('.graph-center').css('height', depthHeight);
 	$('.graph-right').css('height', mmiHeight);
@@ -299,12 +304,17 @@ function setGraphValues(earthquake) {
 function initializeSubmitButton() {
 	$('#submit').click(function() {
 		event.preventDefault();
-		startTime = "&starttime=" + $('#minimum-date').val();
-		endTime = "&endtime=" + $('#maximum-date').val();
+		startTime = "&starttime=" + formatDate($('#minimum-date').val());
+		endTime = "&endtime=" + formatDate($('#maximum-date').val());
 		minMagnitude = "&minmagnitude=" + $('#minimum-magnitude').val();
 		$('.loadingscreen').fadeIn(150);
 		getEarthquakeInfo();
 	});
+}
+
+function formatDate(dateString) {
+	let dateStringArray = dateString.split('/');
+	return dateStringArray[2] + '-' + dateStringArray[0] + '-' + dateStringArray[1];
 }
 
 
