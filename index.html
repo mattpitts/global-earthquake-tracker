@@ -15,34 +15,32 @@
 		<title>Global Earthquake Tracker</title>
 	</head>
 	<body>
+		<h1 class="maintitle" id="title">Global<br /> Earthquake<br /> Tracker</h1>
 
 		<div class="loadingscreen">
 			<img src="media/default.gif" alt="" class="loadingimage"/>
 		</div>
 		<div class="container-fluid">
 			<header class="row">
-				<div class="col-sm-3">
-					<h1 class="maintitle" id="title">Global Earthquake Tracker</h1>
-				</div>
-				<div class="col-sm-3">
+				<div class="col-sm-6">
 
 				</div>
 				<div class="col-sm-5">
 					<form>
 						<div class="row">
 
-							<div class="col-sm-6">
+							<div class="col-sm-4 date-picker">
 								<div class="form-group">
 									<label for="minimum-date">Start Date:</label>
-									<input type="minimum-date" class="form-control" id="minimum-date" value="2013-01-15">
+									<input type="minimum-date" class="form-control" id="minimum-date" value="01/15/2010">
 									<label for="maximum-date">End Date:</label>
-									<input type="maximum-date" class="form-control" id="maximum-date" value="2015-01-15">
+									<input type="maximum-date" class="form-control" id="maximum-date" value="01/15/2015">
 								</div>
 							</div>
-							<div class="col-sm-4">
+							<div class="col-sm-4 date-picker">
 
 								<div class="form-group">
-									<label for="minimum-magnitude">Min. Magnitude</label>
+									<label for="minimum-magnitude">Minimum Magnitude</label>
 	    							<input type="minimum-magnitude" class="form-control" id="minimum-magnitude" value="7">
 									<label for="card-options" class="text-small">Sort By:</label>
 									<select class="custom-select" name ="card-options" id="card-options">
@@ -52,9 +50,8 @@
 										<option value="felt">Population affected by shaking</option>
 									</select>
 								</div>
-	  							</div>
-
-							<div class="col-sm-2 buttontest align-self-end">
+	  						</div>
+							<div class="col-sm-4 submitbuttoncolumn">
 								<button type="submit" id="submit" class="btn btn-primary searchbutton">Search</button>
 							</div>
 						</div>
@@ -65,10 +62,7 @@
 				</div>
 			</header>
 			<main class="row">
-				<div class="col-sm-1">
-
-				</div>
-				<div class="col-sm-5 mapcontainer">
+				<div class="col-sm-6 mapcontainer">
 					<div id="earth_div" class="globe-container">
 
 					</div>

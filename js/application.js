@@ -176,9 +176,19 @@ function createSortedCarouselArray(key) {
 	}
 	createDetailContent(sorted[0]);
 	centerGlobeOnEarthquake(sorted[0].index);
+	replaceNullsWithNoData(sorted);
 	return sorted;
 }
 
+function replaceNullsWithNoData(array) {
+	for (var i = 0; i < array.length; i++) {
+		for(let x in array[i]) {
+			if(array[i][x] === null) {
+				array[i][x] = "No data";
+			}
+		}
+	}
+}
 
 function createEarthquakeCard(earthquake, key) {
 	let keyText = createKeyText(key);
@@ -289,12 +299,10 @@ function createDetailsList(earthquake) {
 
 
 function setGraphValues(earthquake) {
-	console.log(minValues);
-	console.log(maxValues);
-	let magHeight = (((earthquake.magnitude - minValues.magnitude) / (maxValues.magnitude - minValues.magnitude)) * 100) + '%';
+	let magHeight = ((earthquake.magnitude / maxValues.magnitude) * 100) + '%';
 	let depthHeight = ((earthquake.depth / maxValues.depth) * 100) + '%';
-	let mmiHeight = (((earthquake.mmi - minValues.mmi) / (maxValues.mmi - minValues.mmi)) * 100) + '%';// doesnt work; need to remove null values
-	// let mmiHeight = (((earthquake.mmi - 0) / (maxValues.mmi - 0)) * 100) + '%';
+	// let mmiHeight = (((earthquake.mmi - minValues.mmi) / (maxValues.mmi - minValues.mmi)) * 100) + '%';// doesnt work; need to remove null values
+	let mmiHeight = ((earthquake.mmi / maxValues.mmi) * 100) + '%';
 	$('.graph-left').css('height', magHeight);
 	$('.graph-center').css('height', depthHeight);
 	$('.graph-right').css('height', mmiHeight);
