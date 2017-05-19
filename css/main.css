@@ -2,14 +2,12 @@
 
 header {
 	height: 20vh;
-	background-color: gray;
-	box-shadow: 2px 2px 10px black;
 	margin-bottom: 2%;
-	opacity: 0.9;
 	position: relative;
 }
 .maintitle {
-	margin: 2% 0 5% 30%;
+	margin: 0 0 5% 30%;
+	padding-top: 2vw;
 	text-shadow: 1px 1px 1px #515151;
 }
 main {
@@ -25,11 +23,14 @@ main {
 }
 .mapcontainer {
 	background-color: white;
-	margin-top: 3%;
+	margin-top: 0;
+	padding: 0;
 }
 .globe-container {
 	width: 100%;
 	height: 500px;
+	padding: 0;
+	margin: 0;
 }
 .browsercontainer {
 	background-color: #c4c4c4;
@@ -130,17 +131,17 @@ main {
 .graph-left {
 	width: 32%;
 	height: 100%;
-	background-color: hsl(355, 50%, 50%);
+	background-color: #a3ccd1;
 }
 .graph-center {
 	width: 32%;
 	height: 40%;
-	background-color: hsl(65, 50%, 50%);
+	background-color:  #336666;
 }
 .graph-right {
 	width:32%;
 	height: 10%;
-	background-color: hsl(235, 50%, 50%);
+	background-color: #4b4b91;
 }
 .carousel-cards {
 	height: 100%;
@@ -161,20 +162,18 @@ main {
 	font-size: .7em;
 }
 .carousel-cards .card-block {
-	padding: 5%;
+	padding: 10%;
 	margin: 0;
 	overflow: hidden;
 }
 .carousel-cards .card-header {
 	font-size: 1.1em;
+	height: 15%;
+	padding: 5%;
 }
 .form-group {
 	margin: 0;
 	font-size: .8em;
-}
-.carouselcontainer .card-header {
-	height: 15%;
-	padding: 0;
 }
 .carouselcontainer .card-footer {
 	padding: 1%;
@@ -221,19 +220,23 @@ main {
 	display: flex;
 	justify-content: center;
 	align-items: center;
-	box-shadow: .3px .3px 1px #3d3d3d;
+	box-shadow: 1px 1px 1px #3d3d3d;
 }
 .carousel-left-slow:hover {
 	background-color: #666666;
+	box-shadow: 1.5px 1.5px 1.5px #3d3d3d;
 }
 .carousel-left-slow:active {
 	background-color: #7c7c7c;
+	box-shadow: none;
 }
 .carousel-right-slow:hover {
 	background-color: #666666;
+	box-shadow: 1.5px 1.5px 1.5px #3d3d3d;
 }
 .carousel-right-slow:active {
 	background-color: #7c7c7c;
+	box-shadow: none;
 }
 .left-arrow {
   	border-top: 30px solid transparent;
@@ -248,7 +251,7 @@ main {
 	justify-content: center;
 	align-items: center;
 	border-radius:1%;
-	box-shadow: .3px .3px 1px #3d3d3d;
+	box-shadow: 1px 1px 1px #3d3d3d;
 }
 .right-arrow {
   	border-top: 30px solid transparent;
