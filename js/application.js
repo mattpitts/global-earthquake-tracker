@@ -11,7 +11,10 @@ var maxValues = {};
 var minValues = {};
 var earth;
 var $carouselCards;
-
+// var redMarker = L.VectorMarkers.icon({
+// 	icon: 'coffee',
+// 	markerColor: 'red'
+//   });
 
 $(function() {
 	getEarthquakeInfo();
@@ -258,21 +261,26 @@ function updateGlobeMarkers(earth) {
 	for (let i = 0; i < earthquakeData.length; i++) {
 		let latitude = Number(earthquakeData[i].latitude);
 		let longitude = Number(earthquakeData[i].longitude);
+		// let newMarker = L.marker([latitude,longitude], {icon: redMarker} );
 		let newMarker = WE.marker([latitude,longitude]);
-		newMarker.element.childNodes["0"].setAttribute('data-index', i);
+		$(newMarker.element.childNodes["0"]).click(function() {
+			createDetailContent(earthquakeData[i]);
+			console.log(newMarker);
+			$(newMarker.element.childNodes["0"]).addClass('highlighted');
+		});
 		newMarker.addTo(earth);
 		earthquakeData[i].marker = newMarker;
 	}
-	initializeGlobeMarkerListener();
+	// initializeGlobeMarkerListener();
 }
 
 
-function initializeGlobeMarkerListener() {
-	$('.globe-container').on('click', '.we-pm-icon', function() {
-		let index = $(this).attr('data-index');
-		createDetailContent(earthquakeData[index]);
-	});
-}
+// function initializeGlobeMarkerListener() {
+// 	$('.globe-container').on('click', '.we-pm-icon', function() {
+// 		let index = $(this).attr('data-index');
+// 		createDetailContent(earthquakeData[index]);
+// 	});
+// }
 
 
 function createDetailContent(earthquake) {
